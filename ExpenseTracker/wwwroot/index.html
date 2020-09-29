@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="lib/twitter-bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+        <h3>Add</h3>
+        <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+            <input type="date" id="add-date">
+            <input type="text" id="add-recipient" placeholder="recipient">
+            <input type="text" id="add-amount" placeholder="amount">
+            <input type="text" id="add-currency" placeholder="currency">
+            <select id="add-expensetype" data-style="btn-primary" class="dropdown-toggle">                
+            </select>
+            <input type="submit" value="Add">
+        </form>
+
+        <div id="editForm">
+            <h3>Edit</h3>
+            <form action="javascript:void(0);" onsubmit="updateItem()">
+                <input type="hidden" id="edit-id">
+                <input type="checkbox" id="edit-isComplete">
+                <input type="text" id="edit-name">
+                <input type="submit" value="Save">
+                <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+            </form>
+        </div>
+
+        <p id="counter"></p>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Recipient</th>
+                        <th>Amount</th>
+                        <th>Currency</th>
+                        <th>Type</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                 </thead>
+                <tbody id="expenses"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        init();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="lib/twitter-bootstrap/js/bootstrap.js"></script>
+</body>
+</html>
