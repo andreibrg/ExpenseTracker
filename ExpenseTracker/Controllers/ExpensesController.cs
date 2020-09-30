@@ -12,7 +12,7 @@ namespace ExpenseTRacker.Controllers
     [ApiController]
     public class ExpensesController: ControllerBase
     {
-        private IExpenseService _expenseService;
+        private readonly IExpenseService _expenseService;
         public ExpensesController(IExpenseService expenseService)
         {
             _expenseService = expenseService;

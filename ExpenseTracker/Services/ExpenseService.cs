@@ -2,6 +2,7 @@
 using ExpenseTracker.API.Data;
 using ExpenseTracker.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,18 @@ namespace ExpenseTracker.API.Services
 {
     public class ExpenseService : IExpenseService
     {
-        private ExpenseTrackerContext _context;
-        public ExpenseService(ExpenseTrackerContext context)
+        private readonly ExpenseTrackerContext _context;
+        private readonly ILogger<ExpenseService> _logger;
+        public ExpenseService(ExpenseTrackerContext context, ILogger<ExpenseService> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<Expense> Create(Expense expense)
         {
             await _context.Expenses.AddAsync(expense);
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Created a new expense with id {expense.Id}");
             return expense;
         }
 
@@ -30,8 +34,9 @@ namespace ExpenseTracker.API.Services
             {
                 throw new Exception(ErrorMessages.ItemNotFoundError);
             }
-            _context.Expenses.Remove(expense);
+            _context.Expenses.Remove(expense);            
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Deleted expense with id {expense.Id}");
         }
 
         public async Task<Expense> Get(long id)
@@ -48,6 +53,7 @@ namespace ExpenseTracker.API.Services
         {
             _context.Entry(expense).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Updated expense with id {expense.Id}");
             //todo catch errors
         }
     }
