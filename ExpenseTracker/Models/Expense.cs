@@ -9,13 +9,18 @@ namespace ExpenseTracker.API.Models
 {
     public class Expense
     {
+        [Key]
         public long? Id { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public double Amount { get; set; }
         [Required]
+        public DateTime TransactionDate { get; set; }
+        [Required]
+        public double Amount { get; set; }
+        [MaxLength(100)]
         public string Recipient { get; set; }
         [Required]
+        [MaxLength(10)]
         public string Currency { get; set; }
+        [Required]
         public ExpenseType ExpenseType { get; set; }
     }
 }

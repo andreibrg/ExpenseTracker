@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-sm-8"><h2>Expense Tracker</h2></div>
                         <div class="col-sm-4">
-                            <a href="#addExpenseModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New</span></a>
+                            <a href="#addExpenseModal" class="btn btn-success" data-toggle="modal"><span>Add New</span></a>
                         </div>
                     </div>
                 </div>
@@ -35,98 +35,96 @@
                 </table>
             </div>
         </div>
+    </div>
 
-        <!-- Add Modal -->
-        <div id="addExpenseModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Add Expense</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <!-- Add Modal -->
+    <div id="addExpenseModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Expense</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input class="form-control" type="date" id="add-date" required>
                         </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input class="form-control" type="date" id="add-date">
-                            </div>
-                            <div class="form-group">
-                                <label>Recipient</label>
-                                <input class="form-control" type="text" id="add-recipient">
-                            </div>
-                            <div class="form-group">
-                                <label>Amount</label>
-                                <input class="form-control" type="text" id="add-amount">
-                            </div>
-                            <div class="form-group">
-                                <label>Currency</label>
-                                <input class="form-control" type="text" id="add-currency" placeholder="currency">
-                            </div>
-                            <div class="form-group">
-                                <label>Type</label>
-                                <select class="form-control dropdown-toggle" id="add-expensetype" data-style="btn-primary">
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Recipient</label>
+                            <input class="form-control" type="text" id="add-recipient" maxlength="100">
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-info" value="Save">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input class="form-control" type="number" min="0" step="any" id="add-amount" required>
                         </div>
-                    </form>
-                </div>
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <input class="form-control" type="text" id="add-currency" maxlength="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select class="form-control dropdown-toggle" id="add-expensetype" data-style="btn-primary">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="submit" class="btn btn-info" value="Save">
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Edit Modal -->
-        <div id="editExpenseModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="javascript:void(0);" onsubmit="updateItem()">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Edit Expense</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <!-- Edit Modal -->
+    <div id="editExpenseModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="javascript:void(0);" onsubmit="updateItem()">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Expense</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit-id">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input class="form-control" type="date" id="edit-date" required>
                         </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="edit-id">
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input class="form-control" type="date" id="edit-date">
-                            </div>
-                            <div class="form-group">
-                                <label>Recipient</label>
-                                <input class="form-control" type="text" id="edit-recipient">
-                            </div>
-                            <div class="form-group">
-                                <label>Amount</label>
-                                <input class="form-control" type="text" id="edit-amount">
-                            </div>
-                            <div class="form-group">
-                                <label>Currency</label>
-                                <input class="form-control" type="text" id="edit-currency" placeholder="currency">
-                            </div>
-                            <div class="form-group">
-                                <label>Type</label>
-                                <select class="form-control dropdown-toggle" id="edit-expensetype" data-style="btn-primary">
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Recipient</label>
+                            <input class="form-control" type="text" id="edit-recipient" maxlength="100">
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-info" value="Save">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input class="form-control" type="number" min="0" step="any" id="edit-amount" required>
                         </div>
-                    </form>
-                </div>
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <input class="form-control" type="text" id="edit-currency" maxlength="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select class="form-control dropdown-toggle" id="edit-expensetype" data-style="btn-primary">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="submit" class="btn btn-info" value="Save">
+                    </div>
+                </form>
             </div>
         </div>
-
-
-
-
-        <script src="js/site.js" asp-append-version="true"></script>
-        <script type="text/javascript">
-            init();
-        </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="lib/twitter-bootstrap/js/bootstrap.js"></script>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="lib/twitter-bootstrap/js/bootstrap.js"></script>
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        init();
+    </script>
 </body>
 </html>

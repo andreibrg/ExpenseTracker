@@ -5,38 +5,31 @@ let expenseTypes = [];
 function init() {
     getExpenseItems();
     getExpenseTypes();
-    closeInput();
+    addValidation();
 }
 
 function getExpenseTypes() {
     fetch(`${apiPath}/expenseTypes`)
         .then(response => response.json())
-        .then(data => _displayExpenseTypes(data))
+        .then(data => displayExpenseTypes(data))
         .catch(error => console.error('Unable to get expense types.', error));
 }
 
 function getExpenseItems() {
     fetch(apiPath)
         .then(response => response.json())
-        .then(data => _displayItems(data))
+        .then(data => displayItems(data))
         .catch(error => console.error('Unable to get items.', error));
 }
 
-function addItem() {
-    const addDateTextbox = document.getElementById('add-date');
-    const addRecipientTextbox = document.getElementById('add-recipient');
-    const addAmountTextbox = document.getElementById('add-amount');
-    const addCurrencyTextbox = document.getElementById('add-currency');
-    const addTypeList = document.getElementById('add-expensetype');
-
+function addItem() {   
     const newExpense = {        
-        TransactionDate: addDateTextbox.value.trim(),
-        Recipient: addRecipientTextbox.value.trim(),
-        Currency: addCurrencyTextbox.value.trim(),
-        Amount: parseInt(addAmountTextbox.value.trim()),         //todo add validation, catch errors
-        ExpenseType: addTypeList.value.trim(),
+        TransactionDate: $('#add-date').val().trim(),
+        Recipient: $('#add-recipient').val().trim(),
+        Currency: $('#add-currency').val().trim(),
+        Amount: parseFloat($('#add-amount').val().trim()),         
+        ExpenseType: $('#add-expensetype').val().trim(),
     };
-
     fetch(apiPath, {
         method: 'POST',
         headers: {
@@ -48,7 +41,7 @@ function addItem() {
         .then(response => response.json())
         .then(() => {
             getExpenseItems();
-            _clearAddInputs();
+            clearAddInputs();
         })
         .catch(error => console.error('Unable to add item.', error));
     $('#addExpenseModal').modal('hide');
@@ -62,17 +55,16 @@ function deleteItem(id) {
         .catch(error => console.error('Unable to delete item.', error));
 }
 
-function displayEditForm(id) {
+function displayEditModal(id) {
     const item = expenses.find(item => item.id === id);
     $('#editExpenseModal').modal('show');
-
-    document.getElementById('edit-id').value = item.id;
+    $('#edit-id').val(item.id);
     if (item.transactionDate !== "undefined") {
-        document.getElementById('edit-date').value = parseDate(item.transactionDate);
+        $('#edit-date').val(parseDate(item.transactionDate));
     }    
-    document.getElementById('edit-recipient').value = item.recipient;
-    document.getElementById('edit-amount').value = item.amount;
-    document.getElementById('edit-currency').value = item.currency;
+    $('#edit-recipient').val(item.recipient);
+    $('#edit-amount').val(item.amount);
+    $('#edit-currency').val(item.currency);
     const selectorList = document.getElementById('edit-expensetype');
     expenseTypes.forEach(expenseType => {
         var el = document.createElement("option");
@@ -83,24 +75,17 @@ function displayEditForm(id) {
         }
         selectorList.add(el);
     });
-    
-   
 }
 
-function updateItem() {
-    const addDateTextbox = document.getElementById('edit-date');
-    const addRecipientTextbox = document.getElementById('edit-recipient');
-    const addAmountTextbox = document.getElementById('edit-amount');
-    const addCurrencyTextbox = document.getElementById('edit-currency');
-    const addTypeList = document.getElementById('edit-expensetype');
-    const itemId = document.getElementById('edit-id').value;
+function updateItem() {  
+    const itemId = $('#edit-id').val();
     const item = {
-        id: parseInt(itemId, 10),   
-        TransactionDate: addDateTextbox.value.trim(),
-        Recipient: addRecipientTextbox.value.trim(),
-        Currency: addCurrencyTextbox.value.trim(),
-        Amount: parseInt(addAmountTextbox.value.trim()),         //todo add validation, catch errors
-        ExpenseType: addTypeList.value.trim(),
+        id: parseInt(itemId, 10),
+        TransactionDate: $('#edit-date').val().trim(),
+        Recipient: $('#edit-recipient').val().trim(),
+        Currency: $('#edit-currency').val().trim(),
+        Amount: parseFloat($('#edit-amount').val().trim()),         
+        ExpenseType: $('#edit-expensetype').val().trim(),
     };
 
     fetch(`${apiPath}/${itemId}`, {
@@ -117,10 +102,6 @@ function updateItem() {
     return false;
 }
 
-function closeInput() {
-    document.getElementById('editForm').style.display = 'none';
-}
-
 function parseDate(dateInput) {
     var date = new Date(dateInput);
     var day = date.getDate();
@@ -131,21 +112,15 @@ function parseDate(dateInput) {
     return year + "-" + month + "-" + day;
 }
 
-function _clearAddInputs() {
-    const addDateTextbox = document.getElementById('add-date');
-    const addRecipientTextbox = document.getElementById('add-recipient');
-    const addAmountTextbox = document.getElementById('add-amount');
-    const addCurrencyTextbox = document.getElementById('add-currency');
-    const addTypeList = document.getElementById('add-expensetype');
-
-    addDateTextbox.value = '';
-    addRecipientTextbox.value = '';
-    addAmountTextbox.value = '';
-    addCurrencyTextbox.value = '';      //todo extrect in method
-    addTypeList.selectedIndex = 0;
+function clearAddInputs() { 
+    $('#add-date').val('');
+    $('#add-recipient').val('')
+    $('#add-amount').val('');
+    $('#add-currency').val('');
+    $('#add-expensetype').prop('selectedIndex', 0);
 }
 
-function _displayExpenseTypes(data) {
+function displayExpenseTypes(data) {
     const selectorList = document.getElementById('add-expensetype');
     data.forEach(item => {
         var el = document.createElement("option");
@@ -157,21 +132,22 @@ function _displayExpenseTypes(data) {
     expenseTypes = data;
 }
 
-function _displayItems(data) {
+function displayItems(data) {
     const tBody = document.getElementById('expenses');
     tBody.innerHTML = '';
-
     const button = document.createElement('button');
 
     data.forEach(item => {     
 
         let editButton = button.cloneNode(false);
         editButton.innerText = 'Edit';
-        editButton.setAttribute('onclick', `displayEditForm(${item.id})`);
+        editButton.setAttribute('onclick', `displayEditModal(${item.id})`);
+        editButton.setAttribute('class', 'btn btn-secondary');        
 
         let deleteButton = button.cloneNode(false);
         deleteButton.innerText = 'Delete';
         deleteButton.setAttribute('onclick', `deleteItem(${item.id})`);
+        deleteButton.setAttribute('class', 'btn btn-danger');  
 
         let tr = tBody.insertRow();
 
@@ -205,6 +181,11 @@ function _displayItems(data) {
         let td7 = tr.insertCell(6);
         td7.appendChild(deleteButton);
     });
-
     expenses = data;
+}
+
+function addValidation() {
+    //force expense date to be in the past
+    var dtToday = new Date();
+    $('#add-date').attr('max', parseDate(dtToday));
 }

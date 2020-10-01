@@ -39,7 +39,6 @@ namespace ExpenseTRacker
             });     //serialize enums as string
 
             services.AddTransient<IExpenseService, ExpenseService>();
-
             
         }
 
