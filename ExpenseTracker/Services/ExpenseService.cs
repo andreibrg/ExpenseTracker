@@ -22,7 +22,15 @@ namespace ExpenseTracker.API.Services
         public async Task<Expense> Create(Expense expense)
         {
             await _context.Expenses.AddAsync(expense);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to create Expense : {e.Message}");
+                throw;
+            }
             _logger.LogInformation($"Created a new expense with id {expense.Id}");
             return expense;
         }
@@ -32,7 +40,7 @@ namespace ExpenseTracker.API.Services
             var expense = await _context.Expenses.FindAsync(id);
             if (expense == null)
             {
-                throw new Exception(ErrorMessages.ItemNotFoundError);
+                throw new ItemNotFoundException(ErrorMessages.ItemNotFoundError); 
             }
             _context.Expenses.Remove(expense);            
             await _context.SaveChangesAsync();
@@ -51,10 +59,32 @@ namespace ExpenseTracker.API.Services
 
         public async Task Update(long id, Expense expense)
         {
+            expense.Id = id;
             _context.Entry(expense).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception e)
+            {                
+                if (!ExpenseExists(id))
+                {
+                    _logger.LogError($"Failed to update Expense with id {id} because it does not exist");
+                    throw new ItemNotFoundException(ErrorMessages.ItemNotFoundError);
+                }
+                else
+                {
+                    _logger.LogError($"Failed to update Expense with id {id}: {e.Message}");
+                    throw;
+                }
+            }
             _logger.LogInformation($"Updated expense with id {expense.Id}");
-            //todo catch errors
+        }
+
+        private bool ExpenseExists(long id)
+        {
+            return _context.Expenses.Any(e => e.Id == id);
         }
     }
 }

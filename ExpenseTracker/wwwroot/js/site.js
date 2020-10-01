@@ -5,6 +5,7 @@ let expenseTypes = [];
 function init() {
     getExpenseItems();
     getExpenseTypes();
+    closeInput();
 }
 
 function getExpenseTypes() {
@@ -50,6 +51,7 @@ function addItem() {
             _clearAddInputs();
         })
         .catch(error => console.error('Unable to add item.', error));
+    $('#addExpenseModal').modal('hide');
 }
 
 function deleteItem(id) {
@@ -62,19 +64,43 @@ function deleteItem(id) {
 
 function displayEditForm(id) {
     const item = expenses.find(item => item.id === id);
+    $('#editExpenseModal').modal('show');
 
-    document.getElementById('edit-name').value = item.name;
     document.getElementById('edit-id').value = item.id;
-    document.getElementById('edit-isComplete').checked = item.isComplete;
-    document.getElementById('editForm').style.display = 'block';
+    if (item.transactionDate !== "undefined") {
+        document.getElementById('edit-date').value = parseDate(item.transactionDate);
+    }    
+    document.getElementById('edit-recipient').value = item.recipient;
+    document.getElementById('edit-amount').value = item.amount;
+    document.getElementById('edit-currency').value = item.currency;
+    const selectorList = document.getElementById('edit-expensetype');
+    expenseTypes.forEach(expenseType => {
+        var el = document.createElement("option");
+        el.text = expenseType;
+        el.value = expenseType;
+        if (el.text == item.expenseType) { 
+            el.selected = true;
+        }
+        selectorList.add(el);
+    });
+    
+   
 }
 
 function updateItem() {
+    const addDateTextbox = document.getElementById('edit-date');
+    const addRecipientTextbox = document.getElementById('edit-recipient');
+    const addAmountTextbox = document.getElementById('edit-amount');
+    const addCurrencyTextbox = document.getElementById('edit-currency');
+    const addTypeList = document.getElementById('edit-expensetype');
     const itemId = document.getElementById('edit-id').value;
     const item = {
-        id: parseInt(itemId, 10),
-        isComplete: document.getElementById('edit-isComplete').checked,
-        name: document.getElementById('edit-name').value.trim()
+        id: parseInt(itemId, 10),   
+        TransactionDate: addDateTextbox.value.trim(),
+        Recipient: addRecipientTextbox.value.trim(),
+        Currency: addCurrencyTextbox.value.trim(),
+        Amount: parseInt(addAmountTextbox.value.trim()),         //todo add validation, catch errors
+        ExpenseType: addTypeList.value.trim(),
     };
 
     fetch(`${apiPath}/${itemId}`, {
@@ -87,14 +113,22 @@ function updateItem() {
     })
         .then(() => getExpenseItems())
         .catch(error => console.error('Unable to update item.', error));
-
-    closeInput();
-
+    $('#editExpenseModal').modal('hide');
     return false;
 }
 
 function closeInput() {
     document.getElementById('editForm').style.display = 'none';
+}
+
+function parseDate(dateInput) {
+    var date = new Date(dateInput);
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+    return year + "-" + month + "-" + day;
 }
 
 function _clearAddInputs() {
@@ -109,12 +143,6 @@ function _clearAddInputs() {
     addAmountTextbox.value = '';
     addCurrencyTextbox.value = '';      //todo extrect in method
     addTypeList.selectedIndex = 0;
-}
-
-function _displayCount(itemCount) {
-    const name = (itemCount === 1) ? 'expense' : 'expenses';
-
-    document.getElementById('counter').innerText = `${itemCount} ${name}`;
 }
 
 function _displayExpenseTypes(data) {
@@ -132,8 +160,6 @@ function _displayExpenseTypes(data) {
 function _displayItems(data) {
     const tBody = document.getElementById('expenses');
     tBody.innerHTML = '';
-
-    _displayCount(data.length);
 
     const button = document.createElement('button');
 

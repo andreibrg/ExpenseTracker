@@ -9,7 +9,7 @@ namespace ExpenseTracker.API.Models
 {
     public class Expense
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public DateTime TransactionDate { get; set; }
         public double Amount { get; set; }
         [Required]

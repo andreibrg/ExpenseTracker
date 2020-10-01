@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ExpenseTracker.API.Services;
 using System.Text.Json.Serialization;
+using ExpenseTracker.API.Common;
 
 namespace ExpenseTRacker
 {
@@ -43,12 +44,13 @@ namespace ExpenseTRacker
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.AddCustomExceptionHandler(logger);
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseHttpsRedirection();

@@ -29,7 +29,10 @@ namespace ExpenseTRacker.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Expense>> Get(long id)
         {
-            return Ok(await _expenseService.Get(id));
+            var expense = await _expenseService.Get(id);
+            if (null == expense)
+                return NotFound();
+            return Ok(expense);
         }
 
         // POST api/<ExpensesController>
@@ -39,7 +42,8 @@ namespace ExpenseTRacker.Controllers
             if (ModelState.IsValid) 
             {
                 var newExpense = await _expenseService.Create(expense);
-                return Created(newExpense.Id.ToString(), newExpense);
+                if(newExpense != null)
+                    return Created(newExpense.Id?.ToString(), newExpense);
             }
             return BadRequest();
         }
@@ -48,12 +52,11 @@ namespace ExpenseTRacker.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] Expense expense)
         {
-            if (id != expense.Id)
+            if (expense.Id.HasValue && id != expense.Id)
             {
                 return BadRequest();
             }
             await _expenseService.Update(id, expense);
-
             return NoContent();
         }
 
