@@ -22,6 +22,13 @@ function getExpenseItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
+function getReports() {
+    fetch(`${apiPath}/reports/bytype`)
+        .then(response => response.json())
+        .then(data => displayReports(data))
+        .catch(error => console.error('Unable to get reports data.', error));
+}
+
 function addItem() {   
     const newExpense = {        
         TransactionDate: $('#add-date').val().trim(),
@@ -188,4 +195,19 @@ function addValidation() {
     //force expense date to be in the past
     var dtToday = new Date();
     $('#add-date').attr('max', parseDate(dtToday));
+}
+
+function displayReports(data) {
+    var chLine = document.getElementById("chLine");
+    var reportData = {
+        datasets: [{
+            data: data.map(x => x.amount),
+            backgroundColor: ["red", "green", "orange", "blue", "black"]
+        }],
+        labels: data.map(x => x.expenseType)        
+    };
+    var pieChart = new Chart(chLine, {
+        type: 'pie',
+        data: reportData        
+    });
 }

@@ -82,6 +82,15 @@ namespace ExpenseTracker.API.Services
             _logger.LogInformation($"Updated expense with id {expense.Id}");
         }
 
+        public async Task<IList<ExpenseReportByType>> GetExpensesByType()
+        {
+            //note in a real implementation this would need to take currency into account
+            return await _context.Expenses
+                .GroupBy(x => x.ExpenseType)
+                .Select(x => new ExpenseReportByType(x.Sum(s => s.Amount), x.Key))
+                .ToListAsync();
+        }   
+
         private bool ExpenseExists(long id)
         {
             return _context.Expenses.Any(e => e.Id == id);

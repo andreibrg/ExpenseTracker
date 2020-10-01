@@ -16,6 +16,7 @@
                         <div class="col-sm-8"><h2>Expense Tracker</h2></div>
                         <div class="col-sm-4">
                             <a href="#addExpenseModal" class="btn btn-success" data-toggle="modal"><span>Add New</span></a>
+                            <a href="#reportsModal" class="btn btn-info" onclick="getReports()" data-toggle="modal"><span>Reports</span></a>
                         </div>
                     </div>
                 </div>
@@ -119,9 +120,43 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Reports Modal -->
+    <div id="reportsModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Expense reports</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Expenses by type
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="chLine"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-info" data-dismiss="modal" value="Close">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="lib/twitter-bootstrap/js/bootstrap.js"></script>
+    <script src="lib/Chart.js/Chart.min.js"></script>
     <script src="js/site.js" asp-append-version="true"></script>
     <script type="text/javascript">
         init();

@@ -14,6 +14,7 @@ namespace ExpenseTracker.API.Services
         Task<Expense> Create(Expense expense);
         Task Update(long id, Expense expense);
         Task Delete(long id);
+        Task<IList<ExpenseReportByType>> GetExpensesByType();
 
     }
 }

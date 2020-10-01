@@ -64,7 +64,6 @@ namespace ExpenseTRacker.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteExpense(int id)
         {
-            //todo treat errors
             await _expenseService.Delete(id);
             return Ok();
         }
@@ -75,6 +74,14 @@ namespace ExpenseTRacker.Controllers
         public async Task<ActionResult<IEnumerable<ExpenseType>>> GetExpenseTypes()
         {
             return Ok(Enum.GetValues(typeof(ExpenseType)));
+        }
+
+        // GET: api/<ExpensesController>/reports/byType
+        [Route("reports/byType")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ExpenseType>>> GetExpenseReportByType()
+        {
+            return Ok(await _expenseService.GetExpensesByType());
         }
     }
 }
